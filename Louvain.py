@@ -1,4 +1,3 @@
-
 def get_nodes(graph):
     nodes=sorted(list(set([edge[0] for edge in graph]+[edge[1] for edge in graph])))
     return nodes
@@ -22,8 +21,6 @@ def get_totals(graph):
     strength={}
     for i in nodes:
         strength[i]=sum([graph[edge] for edge in graph if edge[0]==i or edge[1]==i])
-        # calculate the following way to get same result as net_x_modularity        
-        #strength[i]=sum([graph[edge] for edge in graph if edge[0]==i])+sum([graph[edge] for edge in graph if edge[1]==i])
     total_strength=sum([strength[i] for i in nodes])
     total_weight=sum([graph[edge] for edge in graph])
     return strength,total_weight,total_strength
@@ -78,7 +75,6 @@ def modulize(graph):
 
     strength,total_weight,total_strength=get_totals(graph)
     
-    #########################################################
     # color tells us the color of each node
     color={}
     for n in range(N):
@@ -86,9 +82,7 @@ def modulize(graph):
         # this will be the label for the color
         c='c'+str(n)
         color[i]=c 
-  
-    ##########################################################
-            
+
     weight_in_color={}  
     for i in nodes:
         for j in nodes:
@@ -97,13 +91,12 @@ def modulize(graph):
             else:
                 weight_in_color[(j,color[i])]=0       
                 
-    #########################################################
-                
+
     total_weight_of_color={}
     for c in set(color.values()):
         total_weight_of_color[c]=sum([strength[i] for i in nodes if color[i]==c])            
                 
-    ##########################################################
+
     
     # if no improvements occur in N iterations then this number reaches N and the loop ends
     unsuccessful_iterations=0
@@ -136,10 +129,8 @@ def modulize(graph):
                 best_target=target
             
         if best_delta>0.00000001:
-            #print(modularity(graph,color)+best_delta)
             color[i]=best_target
-            #print(modularity(graph,color))
-            #print()
+
             # update the total_similarity of source
             total_weight_of_color[source]=total_weight_of_color[source]-strength[i]
             # update the total_similarity of target        
@@ -155,7 +146,6 @@ def modulize(graph):
             # if no improvements occur in N iterations then this number reaches N and the loop ends
             unsuccessful_iterations=unsuccessful_iterations+1    
 
-    #######################################################
 
     # start by creating a Weight dictionary where all the pairs have weight 0
     new_weight={}
